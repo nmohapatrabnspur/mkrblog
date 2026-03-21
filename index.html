@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI, GenAI & AGI — Manas Rath</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f0e0c;
+  --ink2: #2d2c28;
+  --muted: #6b6960;
+  --faint: #9a9890;
+  --bg: #faf9f6;
+  --surface: #f2f0eb;
+  --border: #e0ddd5;
+
+  --green:  #1a9e75; --greenl: #e1f5ee; --greend: #0d6b4f;
+  --purple: #5346b5; --purpll: #eeedfe; --purpld: #38318a;
+  --blue:   #1860a5; --bluel:  #e5f1fb; --blued:  #0d4478;
+  --amber:  #b87218; --amberl: #faeeda; --amberd: #7a4c0e;
+  --coral:  #9a3c1c; --corall: #faece7; --corald: #6b2810;
+  --teal:   #0d6b56;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+  --font-ui: 'DM Sans', sans-serif;
+
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow: 0 4px 24px rgba(0,0,0,.07);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+/* ── Reading progress bar ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--blue), var(--purple));
+  width: 0%; z-index: 1000; transition: width .1s;
+}
+
+/* ── Nav ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  background: rgba(250,249,246,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 clamp(1rem,5vw,4rem);
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: box-shadow .3s;
+}
+nav.scrolled { box-shadow: var(--shadow); }
+.nav-logo {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.1rem; color: var(--ink); text-decoration: none;
+  letter-spacing: -.3px;
+}
+.nav-links { display: flex; gap: 1.5rem; list-style: none; }
+.nav-links a {
+  font-family: var(--font-ui); font-size: .85rem; font-weight: 500;
+  color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+  font-family: var(--font-ui); font-size: .82rem; font-weight: 500;
+  background: var(--ink); color: #fff;
+  padding: .4rem 1rem; border-radius: 99px;
+  text-decoration: none; transition: opacity .2s;
+}
+.nav-cta:hover { opacity: .85; }
+
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 100px clamp(1rem,8vw,8rem) 60px;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse 80% 60% at 65% 40%, #d4edff33 0%, transparent 60%),
+              radial-gradient(ellipse 50% 40% at 20% 70%, #d4f5e933 0%, transparent 55%);
+}
+.hero-dots {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, #c8c5bc 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: .35;
+}
+.hero-inner {
+  position: relative; z-index: 1;
+  max-width: 820px;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--font-ui); font-size: .78rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--green); background: var(--greenl);
+  padding: .35rem .9rem; border-radius: 99px;
+  margin-bottom: 1.5rem;
+  animation: fadeUp .6s ease both;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  font-weight: 900; line-height: 1.05;
+  letter-spacing: -2px;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  animation: fadeUp .6s .1s ease both;
+}
+.hero-title em { font-style: italic; color: var(--green); }
+.hero-subtitle {
+  font-family: var(--font-display); font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--muted); margin-bottom: 2rem;
+  animation: fadeUp .6s .2s ease both;
+}
+.hero-meta {
+  display: flex; align-items: center; gap: 1rem;
+  flex-wrap: wrap;
+  animation: fadeUp .6s .3s ease both;
+}
+.hero-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui); font-weight: 700; font-size: 1rem;
+  color: #fff; flex-shrink: 0;
+}
+.hero-meta-text { font-family: var(--font-ui); }
+.hero-meta-name { font-size: .95rem; font-weight: 500; color: var(--ink); }
+.hero-meta-role { font-size: .78rem; color: var(--muted); }
+.hero-scroll {
+  position: absolute; bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: .4rem;
+  font-family: var(--font-ui); font-size: .75rem; color: var(--faint);
+  animation: bounce 2s infinite;
+  z-index: 1;
+}
+.hero-scroll svg { opacity: .5; }
+
+/* ── Article layout ── */
+.article-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 3rem);
+}
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr min(680px, 100%) 1fr;
+}
+.article-grid > * { grid-column: 2; }
+.article-grid > .full-bleed { grid-column: 1 / -1; }
+.article-grid > .wide { grid-column: 1 / -1; max-width: 900px; margin-inline: auto; width: 100%; }
+
+/* ── Section headers ── */
+.section-header {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 4rem 0 1.5rem;
+}
+.section-num {
+  font-family: var(--font-ui); font-size: .75rem; font-weight: 500;
+  color: var(--faint); letter-spacing: .1em;
+  flex-shrink: 0;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700; color: var(--ink); line-height: 1.2;
+  margin-bottom: .8rem;
+}
+.section-lead {
+  font-family: var(--font-body);
+  font-size: 1.05rem; color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Body text ── */
+p { margin-bottom: 1.2rem; color: var(--ink2); }
+strong { color: var(--ink); }
+
+/* ── Pull quote ── */
+.pull-quote {
+  border-left: 4px solid var(--ink);
+  padding: 1.5rem 2rem;
+  margin: 2.5rem 0;
+  background: var(--surface);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.pull-quote p {
+  font-family: var(--font-display); font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  color: var(--ink); line-height: 1.5; margin: 0;
+}
+
+/* ── Analogy box ── */
+.analogy-box {
+  background: var(--amberl);
+  border: 1px solid #f0d9a0;
+  border-left: 4px solid var(--amber);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
+}
+.analogy-label {
+  font-family: var(--font-ui); font-size: .72rem; font-weight: 500;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: .5rem;
+}
+.analogy-box p {
+  font-style: italic; color: var(--ink2); margin: 0;
+  font-size: .97rem;
+}
+
+/* ── Infographic container ── */
+.infographic {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.infographic-title {
+  font-family: var(--font-ui); font-size: .75rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--faint); text-align: center;
+  margin-bottom: 1rem;
+}
+.infographic svg { width: 100%; height: auto; display: block; }
+
+/* ── Profession cards ── */
+.prof-cards { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0; }
+.prof-card {
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--border);
+  border-left: 5px solid;
+  transition: transform .2s, box-shadow .2s;
+  cursor: default;
+}
+.prof-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.prof-card.green  { border-left-color: var(--green);  background: var(--greenl); }
+.prof-card.purple { border-left-color: var(--purple); background: var(--purpll); }
+.prof-card.blue   { border-left-color: var(--blue);   background: var(--bluel); }
+.prof-card.amber  { border-left-color: var(--amber);  background: var(--amberl); }
+.prof-card.coral  { border-left-color: var(--coral);  background: var(--corall); }
+.prof-tag {
+  font-family: var(--font-ui); font-size: .7rem; font-weight: 500;
+  letter-spacing: .15em; text-transform: uppercase;
+  margin-bottom: .4rem;
+}
+.prof-card.green  .prof-tag { color: var(--greend); }
+.prof-card.purple .prof-tag { color: var(--purpld); }
+.prof-card.blue   .prof-tag { color: var(--blued); }
+.prof-card.amber  .prof-tag { color: var(--amberd); }
+.prof-card.coral  .prof-tag { color: var(--corald); }
+.prof-title {
+  font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;
+  margin-bottom: .75rem; color: var(--ink);
+}
+.prof-card p { font-size: .92rem; color: var(--ink2); margin-bottom: .75rem; }
+.prof-card p:last-child { margin-bottom: 0; }
+
+/* ── Myth table ── */
+.myth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 2rem 0; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.myth-header { padding: 1rem 1.25rem; text-align: center; font-family: var(--font-ui); font-size: .85rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #fff; }
+.myth-header.left  { background: #c0392b; }
+.myth-header.right { background: var(--green); }
+.myth-row { display: contents; }
+.myth-cell {
+  padding: .9rem 1.25rem;
+  font-family: var(--font-ui); font-size: .88rem; line-height: 1.5;
+  border-top: 1px solid var(--border);
+}
+.myth-cell.left  { background: #fdf3f2; color: #6b2020; }
+.myth-cell.right { background: #f0fdf7; color: var(--greend); font-weight: 500; }
+
+/* ── Odisha grid ── */
+.odisha-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+.odisha-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.1rem 1.3rem;
+}
+.odisha-label {
+  font-family: var(--font-ui); font-size: .72rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: .4rem;
+}
+.odisha-card p { font-size: .88rem; margin: 0; color: var(--ink2); }
+
+/* ── Concept cards ── */
+.concept-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin: 2rem 0; }
+.concept-card {
+  border-radius: var(--radius-lg); padding: 1.5rem 1.25rem;
+  text-align: center; border: 1px solid var(--border);
+  transition: transform .2s, box-shadow .2s;
+}
+.concept-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.concept-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin: 0 auto 1rem;
+}
+.concept-card.ai    { background: var(--bluel); }
+.concept-card.genai { background: var(--greenl); }
+.concept-card.agi   { background: var(--purpll); }
+.concept-card.ai    .concept-icon { background: var(--blue); }
+.concept-card.genai .concept-icon { background: var(--green); }
+.concept-card.agi   .concept-icon { background: var(--purple); }
+.concept-name { font-family: var(--font-ui); font-size: .92rem; font-weight: 600; margin-bottom: .4rem; color: var(--ink); }
+.concept-role {
+  display: inline-block; font-family: var(--font-ui); font-size: .7rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase; padding: .2rem .7rem;
+  border-radius: 99px; margin-bottom: .6rem;
+  color: #fff;
+}
+.concept-card.ai    .concept-role { background: var(--blue); }
+.concept-card.genai .concept-role { background: var(--green); }
+.concept-card.agi   .concept-role { background: var(--purple); }
+.concept-desc { font-family: var(--font-ui); font-size: .82rem; color: var(--muted); line-height: 1.55; }
+
+/* ── AI + Human banner ── */
+.ai-human-banner {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem;
+  align-items: center; margin: 2rem 0;
+}
+.ai-human-side {
+  border-radius: var(--radius-lg); padding: 1.5rem;
+  text-align: center;
+}
+.ai-human-side.ai    { background: var(--bluel); border: 1px solid #b5d4f4; }
+.ai-human-side.human { background: var(--greenl); border: 1px solid #9fd8cb; }
+.ai-human-heading {
+  font-family: var(--font-display); font-size: 1.8rem; font-weight: 900;
+  margin-bottom: .4rem;
+}
+.ai-human-side.ai    .ai-human-heading { color: var(--blue); }
+.ai-human-side.human .ai-human-heading { color: var(--greend); }
+.ai-human-traits { font-family: var(--font-ui); font-size: .82rem; color: var(--muted); line-height: 1.9; }
+.ai-human-plus {
+  font-family: var(--font-display); font-size: 3rem; font-weight: 900;
+  color: var(--ink); text-align: center; flex-shrink: 0;
+}
+
+/* ── Daily life grid ── */
+.daily-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: .75rem; margin: 2rem 0; }
+.daily-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem .75rem;
+  text-align: center; transition: transform .2s;
+}
+.daily-item:hover { transform: translateY(-2px); }
+.daily-dot {
+  width: 36px; height: 36px; border-radius: 50%;
+  margin: 0 auto .6rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem; color: #fff;
+}
+.daily-label { font-family: var(--font-ui); font-size: .78rem; font-weight: 500; color: var(--ink2); }
+
+/* ── Author box ── */
+.author-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 5px solid var(--blue);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  padding: 1.75rem 2rem;
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  margin: 3rem 0;
+}
+.author-avatar-lg {
+  width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui); font-weight: 700; font-size: 1.4rem; color: #fff;
+}
+.author-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: .2rem; }
+.author-role { font-family: var(--font-ui); font-size: .82rem; color: var(--blue); margin-bottom: .6rem; }
+.author-pills { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .75rem; }
+.author-pill {
+  font-family: var(--font-ui); font-size: .72rem; font-weight: 400;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--muted); padding: .2rem .65rem; border-radius: 99px;
+}
+.author-bio { font-family: var(--font-ui); font-size: .88rem; color: var(--muted); line-height: 1.65; }
+
+/* ── Footer ── */
+footer {
+  background: var(--ink); color: rgba(255,255,255,.5);
+  text-align: center; padding: 2.5rem 1rem;
+  font-family: var(--font-ui); font-size: .82rem;
+  margin-top: 4rem;
+}
+footer strong { color: rgba(255,255,255,.85); }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(8px); }
+}
+@keyframes countUp { from { opacity:0; } to { opacity:1; } }
+@keyframes drawLine { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes scaleIn { from { transform: scale(0); opacity:0; } to { transform: scale(1); opacity:1; } }
+@keyframes slideRight { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .concept-cards { grid-template-columns: 1fr 1fr; }
+  .daily-grid { grid-template-columns: repeat(4,1fr); }
+}
+@media (max-width: 680px) {
+  .nav-links { display: none; }
+  .concept-cards { grid-template-columns: 1fr; }
+  .myth-grid { grid-template-columns: 1fr; }
+  .myth-header.right, .myth-cell.right { display: none; }
+  .odisha-grid { grid-template-columns: 1fr; }
+  .daily-grid { grid-template-columns: repeat(2, 1fr); }
+  .ai-human-banner { grid-template-columns: 1fr; }
+  .ai-human-plus { display: none; }
+  .author-box { flex-direction: column; }
+  .article-grid { grid-template-columns: 1fr; }
+  .article-grid > .wide, .article-grid > .full-bleed { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="#">Manas Rath</a>
+  <ul class="nav-links">
+    <li><a href="#history">History</a></li>
+    <li><a href="#concepts">Concepts</a></li>
+    <li><a href="#professions">Professions</a></li>
+    <li><a href="#odisha">Odisha</a></li>
+    <li><a href="#future">Future</a></li>
+  </ul>
+  <a class="nav-cta" href="#author">About Author</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#1a9e75"/></svg>
+      Feature Article · Technology & Society · 2025
+    </div>
+    <h1 class="hero-title">AI, GenAI &amp; <em>AGI</em></h1>
+    <p class="hero-subtitle">Yesterday, Today and Tomorrow —<br>A Complete Picture for the Thinking Mind</p>
+    <div class="hero-meta">
+      <div class="hero-avatar">MR</div>
+      <div class="hero-meta-text">
+        <div class="hero-meta-name">Manas Rath</div>
+        <div class="hero-meta-role">Senior Director AI &amp; Analytics · Brandscapes Worldwide · Biranarasinghpur, Odisha</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll to read</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8l5 5 5-5" stroke="#0f0e0c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<main>
+<div class="article-wrap">
+<div class="article-grid">
+
+<!-- Intro -->
+<div style="padding: 3rem 0 1rem;">
+  <p style="font-family:var(--font-display);font-style:italic;font-size:1.15rem;color:var(--ink);line-height:1.7;" class="reveal">Every generation witnesses a turning point. From bullock carts to tractors. From handwritten letters to smartphones. Today, we stand at the edge of another revolution — <strong>Artificial Intelligence</strong>.</p>
+  <p class="reveal">Unlike earlier technologies that changed how we work, AI is beginning to change how we <em>think, decide, and create</em>. It is already shaping medicine, governance, science, engineering, and business — and it is coming to our villages, our farms, and our homes.</p>
+  <p class="reveal">In our village of Biranarasinghpur, we have doctors, IAS officers, scientists, engineers, and entrepreneurs. This article is for all of you — a clear, honest, and practical picture of AI, without jargon or hype.</p>
+  <div class="pull-quote reveal">
+    <p>"AI is neither magic nor a menace. It is a human-made tool — and human wisdom decides its impact."</p>
+  </div>
+</div>
+
+<!-- SECTION 1: HISTORY -->
+<div id="history">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">How Did AI Begin?</h2>
+  <p class="section-lead reveal">The story of thinking machines — from a bold 1950s question to a global revolution</p>
+  <p class="reveal">Early computers were like very strict clerks — they followed every instruction exactly, but could not learn anything new. Then, in the 1950s, scientists asked a bold question: <em>"Can machines learn from experience, just like humans do?"</em> That question gave birth to Artificial Intelligence.</p>
+  <p class="reveal">For decades, progress was slow. But two things changed everything: the explosion of data from the internet, and vastly more powerful computers. By the 2010s, AI could recognise faces, understand speech, and beat world champions at chess and Go. Then, in November 2022, ChatGPT arrived — reaching 100 million users in just two months. Faster than any technology in human history.</p>
+</div>
+
+<!-- INFOGRAPHIC: Timeline -->
+<div class="infographic wide reveal" style="margin-top:1rem;">
+  <div class="infographic-title">The AI Journey — Key Milestones</div>
+  <svg viewBox="0 0 820 160" xmlns="http://www.w3.org/2000/svg" id="timeline-svg">
+    <defs>
+      <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#1a9e75"/>
+        <stop offset="50%" style="stop-color:#1860a5"/>
+        <stop offset="100%" style="stop-color:#5346b5"/>
+      </linearGradient>
+    </defs>
+    <!-- spine -->
+    <line x1="50" y1="82" x2="770" y2="82" stroke="url(#lineGrad)" stroke-width="2.5" stroke-dasharray="1000" stroke-dashoffset="1000" style="animation:drawLine 1.5s .3s ease forwards"/>
+    <!-- Events: alternating above/below -->
+    <!-- 1950s above -->
+    <circle cx="90" cy="82" r="14" fill="#eeedfe" stroke="#5346b5" stroke-width="2" style="animation:scaleIn .4s .8s ease both"/>
+    <circle cx="90" cy="82" r="8"  fill="#5346b5" style="animation:scaleIn .4s .8s ease both"/>
+    <line x1="90" y1="68" x2="90" y2="42" stroke="#ccc" stroke-width="1"/>
+    <text x="90" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2d2c28" style="animation:fadeIn .4s 1s ease both">1950s</text>
+    <text x="90" y="22" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960" style="animation:fadeIn .4s 1s ease both">AI is born</text>
+    <!-- 1980s below -->
+    <circle cx="193" cy="82" r="14" fill="#e5f1fb" stroke="#1860a5" stroke-width="2" style="animation:scaleIn .4s .95s ease both"/>
+    <circle cx="193" cy="82" r="8"  fill="#1860a5" style="animation:scaleIn .4s .95s ease both"/>
+    <line x1="193" y1="96" x2="193" y2="120" stroke="#ccc" stroke-width="1"/>
+    <text x="193" y="132" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2d2c28" style="animation:fadeIn .4s 1.1s ease both">1980s</text>
+    <text x="193" y="146" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960" style="animation:fadeIn .4s 1.1s ease both">Expert Systems</text>
+    <!-- 1997 above -->
+    <circle cx="296" cy="82" r="14" fill="#e1f5ee" stroke="#1a9e75" stroke-width="2" style="animation:scaleIn .4s 1.1s ease both"/>
+    <circle cx="296" cy="82" r="8"  fill="#1a9e75" style="animation:scaleIn .4s 1.1s ease both"/>
+    <line x1="296" y1="68" x2="296" y2="42" stroke="#ccc" stroke-width="1"/>
+    <text x="296" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2d2c28" style="animation:fadeIn .4s 1.25s ease both">1997</text>
+    <text x="296" y="22" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960" style="animation:fadeIn .4s 1.25s ease both">Deep Blue wins</text>
+    <!-- 2012 below -->
+    <circle cx="399" cy="82" r="14" fill="#faeeda" stroke="#b87218" stroke-width="2" style="animation:scaleIn .4s 1.25s ease both"/>
+    <circle cx="399" cy="82" r="8"  fill="#b87218" style="animation:scaleIn .4s 1.25s ease both"/>
+    <line x1="399" y1="96" x2="399" y2="120" stroke="#ccc" stroke-width="1"/>
+    <text x="399" y="132" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2d2c28" style="animation:fadeIn .4s 1.4s ease both">2012</text>
+    <text x="399" y="146" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960" style="animation:fadeIn .4s 1.4s ease both">Deep Learning</text>
+    <!-- 2016 above -->
+    <circle cx="502" cy="82" r="14" fill="#faece7" stroke="#9a3c1c" stroke-width="2" style="animation:scaleIn .4s 1.4s ease both"/>
+    <circle cx="502" cy="82" r="8"  fill="#9a3c1c" style="animation:scaleIn .4s 1.4s ease both"/>
+    <line x1="502" y1="68" x2="502" y2="42" stroke="#ccc" stroke-width="1"/>
+    <text x="502" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2d2c28" style="animation:fadeIn .4s 1.55s ease both">2016</text>
+    <text x="502" y="22" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960" style="animation:fadeIn .4s 1.55s ease both">AlphaGo wins</text>
+    <!-- 2022 below -->
+    <circle cx="617" cy="82" r="18" fill="#e1f5ee" stroke="#1a9e75" stroke-width="2.5" style="animation:scaleIn .4s 1.55s ease both"/>
+    <circle cx="617" cy="82" r="11" fill="#1a9e75" style="animation:scaleIn .4s 1.55s ease both"/>
+    <line x1="617" y1="100" x2="617" y2="122" stroke="#ccc" stroke-width="1"/>
+    <text x="617" y="134" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#0d6b4f" style="animation:fadeIn .4s 1.7s ease both">2022</text>
+    <text x="617" y="149" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#1a9e75" font-weight="600" style="animation:fadeIn .4s 1.7s ease both">ChatGPT arrives</text>
+    <!-- Future above -->
+    <circle cx="740" cy="82" r="14" fill="#eeedfe" stroke="#5346b5" stroke-width="2" stroke-dasharray="4 3" style="animation:scaleIn .4s 1.7s ease both"/>
+    <circle cx="740" cy="82" r="8"  fill="#5346b5" opacity=".5" style="animation:scaleIn .4s 1.7s ease both"/>
+    <line x1="740" y1="68" x2="740" y2="42" stroke="#ccc" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="740" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#5346b5" style="animation:fadeIn .4s 1.85s ease both">Future</text>
+    <text x="740" y="22" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#5346b5" style="animation:fadeIn .4s 1.85s ease both">AGI horizon?</text>
+  </svg>
+</div>
+
+<div class="analogy-box reveal">
+  <div class="analogy-label">🌾 Village Analogy</div>
+  <p>A child in our village learns farming not from a textbook, but by observing seasons, understanding the soil, and learning from elders. AI learns the same way — from data and experience, not from rules someone wrote down. The more data it sees, the better it gets — just like the more seasons a farmer experiences, the wiser their judgement.</p>
+</div>
+
+<!-- SECTION 2: CONCEPTS -->
+<div id="concepts">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">AI, GenAI &amp; AGI — The Three Terms Explained</h2>
+  <p class="section-lead reveal">Understanding the difference between what exists, what creates, and what is yet to come</p>
+</div>
+
+<div class="concept-cards wide reveal">
+  <div class="concept-card ai">
+    <div class="concept-icon">🤖</div>
+    <div class="concept-name">AI — Artificial Intelligence</div>
+    <span class="concept-role">Specialist</span>
+    <p class="concept-desc">Does one task very well. Face unlock, spam filter, Google Maps rerouting. Each AI is trained for exactly one job and knows nothing beyond it.</p>
+  </div>
+  <div class="concept-card genai">
+    <div class="concept-icon">✨</div>
+    <div class="concept-name">GenAI — Generative AI</div>
+    <span class="concept-role">Creator</span>
+    <p class="concept-desc">Creates new content — text, images, code, music, video. ChatGPT writes a legal brief. DALL-E paints a picture. It doesn't just answer — it makes.</p>
+  </div>
+  <div class="concept-card agi">
+    <div class="concept-icon">🌟</div>
+    <div class="concept-name">AGI — General Intelligence</div>
+    <span class="concept-role">Future Horizon</span>
+    <p class="concept-desc">Thinks like a human across all domains. <strong>Does not exist yet.</strong> A long-term scientific goal requiring decades of research and careful ethics.</p>
+  </div>
+</div>
+
+<p class="reveal">Traditional AI is <em>discriminative</em> — it classifies, predicts, and detects. GenAI, on the other hand, <em>creates</em>. ChatGPT, Gemini, and Claude are trained on essentially all the text humanity has ever written, generating responses by predicting what words should follow — at extraordinary scale and sophistication.</p>
+
+<!-- GenAI Uses infographic -->
+<div class="infographic wide reveal">
+  <div class="infographic-title">What Generative AI Can Create</div>
+  <svg viewBox="0 0 700 110" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>
+        .hex-anim { animation: scaleIn .4s ease both; }
+        .hex-label { animation: fadeIn .5s ease both; }
+      </style>
+    </defs>
+    <!-- 6 hexagons -->
+    <g transform="translate(58,55)">
+      <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" fill="#e5f1fb" stroke="#1860a5" stroke-width="1.5" class="hex-anim" style="animation-delay:.1s"/>
+      <text y="-6" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#1860a5" class="hex-label" style="animation-delay:.2s">Write</text>
+      <text y="8" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#1860a5" class="hex-label" style="animation-delay:.2s">Text</text>
+    </g>
+    <g transform="translate(175,55)">
+      <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" fill="#faece7" stroke="#9a3c1c" stroke-width="1.5" class="hex-anim" style="animation-delay:.2s"/>
+      <text y="-6" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#9a3c1c" class="hex-label" style="animation-delay:.3s">Create</text>
+      <text y="8" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#9a3c1c" class="hex-label" style="animation-delay:.3s">Images</text>
+    </g>
+    <g transform="translate(292,55)">
+      <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" fill="#e1f5ee" stroke="#1a9e75" stroke-width="1.5" class="hex-anim" style="animation-delay:.3s"/>
+      <text y="-6" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0d6b4f" class="hex-label" style="animation-delay:.4s">Generate</text>
+      <text y="8" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0d6b4f" class="hex-label" style="animation-delay:.4s">Code</text>
+    </g>
+    <g transform="translate(409,55)">
+      <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" fill="#eeedfe" stroke="#5346b5" stroke-width="1.5" class="hex-anim" style="animation-delay:.4s"/>
+      <text y="-6" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#38318a" class="hex-label" style="animation-delay:.5s">Make</text>
+      <text y="8" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#38318a" class="hex-label" style="animation-delay:.5s">Videos</text>
+    </g>
+    <g transform="translate(526,55)">
+      <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" fill="#faeeda" stroke="#b87218" stroke-width="1.5" class="hex-anim" style="animation-delay:.5s"/>
+      <text y="-6" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#7a4c0e" class="hex-label" style="animation-delay:.6s">Compose</text>
+      <text y="8" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#7a4c0e" class="hex-label" style="animation-delay:.6s">Music</text>
+    </g>
+    <g transform="translate(643,55)">
+      <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" fill="#e1f5ee" stroke="#0d6b56" stroke-width="1.5" class="hex-anim" style="animation-delay:.6s"/>
+      <text y="-6" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0d6b56" class="hex-label" style="animation-delay:.7s">Design</text>
+      <text y="8" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#0d6b56" class="hex-label" style="animation-delay:.7s">Drugs</text>
+    </g>
+  </svg>
+</div>
+
+<div class="analogy-box reveal">
+  <div class="analogy-label">💡 Simple Analogy</div>
+  <p>AI is like a skilled plumber — extraordinary at one job. GenAI is like a talented artist who can paint, write poetry, compose music, and build furniture. AGI would be like a complete, fully capable human being — but one that does not yet exist.</p>
+</div>
+
+<!-- SECTION 3: DAILY LIFE -->
+<div>
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">AI Is Already in Your Life — Silently</h2>
+  <p class="reveal">You do not need to be a computer scientist to use AI. You are probably already using it every single day without realising it.</p>
+</div>
+
+<div class="daily-grid wide reveal">
+  <div class="daily-item"><div class="daily-dot" style="background:#1860a5">🗺</div><div class="daily-label">Google Maps</div></div>
+  <div class="daily-item"><div class="daily-dot" style="background:#9a3c1c">▶</div><div class="daily-label">YouTube Suggests</div></div>
+  <div class="daily-item"><div class="daily-dot" style="background:#1a9e75">😊</div><div class="daily-label">Face Unlock</div></div>
+  <div class="daily-item"><div class="daily-dot" style="background:#5346b5">🔒</div><div class="daily-label">UPI Fraud Detect</div></div>
+  <div class="daily-item"><div class="daily-dot" style="background:#b87218">📧</div><div class="daily-label">Spam Filter</div></div>
+  <div class="daily-item"><div class="daily-dot" style="background:#1860a5">🌤</div><div class="daily-label">Weather Forecast</div></div>
+  <div class="daily-item"><div class="daily-dot" style="background:#1a9e75">⌨</div><div class="daily-label">Predictive Text</div></div>
+  <div class="daily-item"><div class="daily-dot" style="background:#9a3c1c">🛵</div><div class="daily-label">Swiggy Delivery</div></div>
+</div>
+
+<p class="reveal">What changed dramatically since 2022 is that AI became <em>conversational</em> and <em>creative</em>. A farmer in Puri asking about pest management, a student writing a college essay, a doctor checking a drug interaction — all can now access intelligence that was previously available only to large organisations with expensive specialists.</p>
+
+<!-- SECTION 4: PROFESSIONS -->
+<div id="professions">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">How AI Is Transforming Our Professions</h2>
+  <p class="section-lead reveal">Our village is home to people from many distinguished professional walks. Here is what AI means for each of them.</p>
+</div>
+
+<!-- Profession bar chart infographic -->
+<div class="infographic wide reveal">
+  <div class="infographic-title">AI Productivity Gains by Profession (Estimated %)</div>
+  <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- bars -->
+    <g>
+      <!-- Healthcare -->
+      <rect x="30" y="160" width="100" height="0" fill="#e1f5ee" stroke="#1a9e75" stroke-width="1" rx="4" ry="4"
+        style="animation: growBar 1s .2s ease forwards" />
+      <rect x="30" y="60" width="100" height="100" fill="#e1f5ee" stroke="#1a9e75" stroke-width="1.5" rx="4" ry="4"
+        style="transform-origin:30px 160px; transform:scaleY(0); animation:growBar 1s .2s ease forwards"/>
+      <text x="80" y="52" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#0d6b4f">~60%</text>
+      <text x="80" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960">Healthcare</text>
+      <!-- Governance -->
+      <rect x="165" y="80" width="100" height="80" fill="#eeedfe" stroke="#5346b5" stroke-width="1.5" rx="4" ry="4"
+        style="transform-origin:165px 160px; transform:scaleY(0); animation:growBar 1s .35s ease forwards"/>
+      <text x="215" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#38318a">~50%</text>
+      <text x="215" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960">Governance</text>
+      <!-- Research -->
+      <rect x="300" y="50" width="100" height="110" fill="#e5f1fb" stroke="#1860a5" stroke-width="1.5" rx="4" ry="4"
+        style="transform-origin:300px 160px; transform:scaleY(0); animation:growBar 1s .5s ease forwards"/>
+      <text x="350" y="42" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#0d4478">~70%</text>
+      <text x="350" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960">Research</text>
+      <!-- Engineering -->
+      <rect x="435" y="65" width="100" height="95" fill="#faeeda" stroke="#b87218" stroke-width="1.5" rx="4" ry="4"
+        style="transform-origin:435px 160px; transform:scaleY(0); animation:growBar 1s .65s ease forwards"/>
+      <text x="485" y="57" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#7a4c0e">~55%</text>
+      <text x="485" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960">Engineering</text>
+      <!-- Business -->
+      <rect x="570" y="30" width="100" height="130" fill="#faece7" stroke="#9a3c1c" stroke-width="1.5" rx="4" ry="4"
+        style="transform-origin:570px 160px; transform:scaleY(0); animation:growBar 1s .8s ease forwards"/>
+      <text x="620" y="22" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#6b2810">~80%</text>
+      <text x="620" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#6b6960">Business</text>
+    </g>
+    <!-- baseline -->
+    <line x1="20" y1="160" x2="680" y2="160" stroke="#e0ddd5" stroke-width="1"/>
+    <text x="350" y="198" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#9a9890">Estimated efficiency / productivity amplification with AI assistance</text>
+  </svg>
+</div>
+
+<style>
+@keyframes growBar {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+</style>
+
+<div class="prof-cards wide reveal">
+  <div class="prof-card green">
+    <div class="prof-tag">For Doctors &amp; Healthcare</div>
+    <div class="prof-title">Your AI Diagnostic Partner</div>
+    <p>AI can study an X-ray, retinal scan, or CT image and spot early signs of cancer, diabetic damage, or heart disease — often before a human eye would notice. Google's DeepMind identifies over 50 eye conditions with specialist-level accuracy. In Odisha, AI tools are helping ASHA workers conduct accurate preliminary diagnoses.</p>
+    <p>For senior doctors, GenAI handles cognitive burden — summarising a patient's history in seconds, generating differential diagnoses, flagging drug interactions. AlphaFold solved the 50-year protein folding mystery, opening new drug discovery pathways. AI gives every doctor a tireless, encyclopaedic second opinion.</p>
+  </div>
+  <div class="prof-card purple">
+    <div class="prof-tag">For IAS / OAS Officers &amp; Governance</div>
+    <div class="prof-title">AI and the Intelligent State</div>
+    <p>The MyGov AI helpdesk handled over 3 crore citizen interactions during COVID-19 — in multiple languages, around the clock. Kerala's AI flood prediction system saved thousands of lives in 2018 with advance warnings hours earlier than traditional systems.</p>
+    <p>AI-powered satellite imagery shows crop stress, encroachment, or construction progress without physical inspection. Andhra Pradesh's AI land records system reduced disputes dramatically. For the modern IAS or OAS officer, AI is the most powerful governance amplifier ever built.</p>
+  </div>
+  <div class="prof-card blue">
+    <div class="prof-tag">For Scientists &amp; Researchers</div>
+    <div class="prof-title">The Universal Research Accelerant</div>
+    <p>ISRO uses deep learning to analyse satellite images for crop monitoring and disaster assessment. Tools like Semantic Scholar summarise thousands of papers, identify research gaps, and suggest hypotheses. A PhD student who would spend six months on a literature review can now do it in a week.</p>
+    <p>In genomics, AI identifies disease-related genes across millions of data points. In materials science, it predicts properties of undiscovered materials. The pace of human scientific discovery is accelerating dramatically.</p>
+  </div>
+  <div class="prof-card amber">
+    <div class="prof-tag">For Engineers &amp; Technology</div>
+    <div class="prof-title">The AI Copilot in Every Workshop</div>
+    <p>GitHub Copilot writes code alongside engineers, catching errors in real time. Studies show 55% productivity gains. Civil engineers simulate earthquake responses and bridge wind loads — thousands of virtual tests in hours. Electrical engineers use AI for smart grid management and predictive maintenance.</p>
+    <p>In electronics and telecommunications — a domain I have worked in since my M.Sc. days — AI is enabling 5G/6G network optimisation too complex for manual control. Engineers who embrace AI as a partner will build the infrastructure of tomorrow.</p>
+  </div>
+  <div class="prof-card coral">
+    <div class="prof-tag">For Entrepreneurs &amp; Business Leaders</div>
+    <div class="prof-title">The Great Equaliser</div>
+    <p>A solo entrepreneur in Puri today can generate professional advertising copy, design a logo, analyse sales data, respond to customers in ten languages, and manage accounts — all using freely available AI tools at nearly zero cost. The capability gap between small and large businesses has largely closed.</p>
+    <p>Agricultural entrepreneurs use AI platforms like Kisan AI and Fasal for soil data, weather forecasts, and market price predictions. At Brandscapes Worldwide, I have seen directly how businesses deploying AI thoughtfully are pulling decisively ahead.</p>
+  </div>
+</div>
+
+<!-- SECTION 5: ODISHA -->
+<div id="odisha">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">AI in Odisha — Closer Than You Think</h2>
+  <p class="section-lead reveal">AI is not just a Silicon Valley story. It is already entering our state, our fields, and our clinics.</p>
+</div>
+
+<!-- Odisha SVG illustration -->
+<div class="infographic wide reveal">
+  <div class="infographic-title">AI Serving Odisha</div>
+  <svg viewBox="0 0 700 120" xmlns="http://www.w3.org/2000/svg">
+    <!-- 5 cards -->
+    <g>
+      <!-- Agriculture -->
+      <rect x="10" y="8" width="126" height="104" rx="10" fill="#e1f5ee" stroke="#1a9e75" stroke-width="1"/>
+      <rect x="10" y="8" width="126" height="26" rx="10" fill="#1a9e75"/>
+      <rect x="10" y="22" width="126" height="12" fill="#1a9e75"/>
+      <text x="73" y="25" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="700" fill="white">Agriculture</text>
+      <circle cx="73" cy="68" r="14" fill="#c6eedf" stroke="#1a9e75" stroke-width="1"/>
+      <text x="73" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">🌾</text>
+      <text x="73" y="96" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b4f">Crop advice &amp;</text>
+      <text x="73" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b4f">pest prediction</text>
+    </g>
+    <g>
+      <rect x="147" y="8" width="126" height="104" rx="10" fill="#e5f1fb" stroke="#1860a5" stroke-width="1"/>
+      <rect x="147" y="8" width="126" height="26" rx="10" fill="#1860a5"/>
+      <rect x="147" y="22" width="126" height="12" fill="#1860a5"/>
+      <text x="210" y="25" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="700" fill="white">Disaster Mgmt</text>
+      <circle cx="210" cy="68" r="14" fill="#c4ddf5" stroke="#1860a5" stroke-width="1"/>
+      <text x="210" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">🌀</text>
+      <text x="210" y="96" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d4478">Cyclone &amp; flood</text>
+      <text x="210" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d4478">early warnings</text>
+    </g>
+    <g>
+      <rect x="284" y="8" width="126" height="104" rx="10" fill="#faece7" stroke="#9a3c1c" stroke-width="1"/>
+      <rect x="284" y="8" width="126" height="26" rx="10" fill="#9a3c1c"/>
+      <rect x="284" y="22" width="126" height="12" fill="#9a3c1c"/>
+      <text x="347" y="25" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="700" fill="white">Healthcare</text>
+      <circle cx="347" cy="68" r="14" fill="#f5c9bb" stroke="#9a3c1c" stroke-width="1"/>
+      <text x="347" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">🏥</text>
+      <text x="347" y="96" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#6b2810">AI diagnosis in</text>
+      <text x="347" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#6b2810">rural clinics</text>
+    </g>
+    <g>
+      <rect x="421" y="8" width="126" height="104" rx="10" fill="#eeedfe" stroke="#5346b5" stroke-width="1"/>
+      <rect x="421" y="8" width="126" height="26" rx="10" fill="#5346b5"/>
+      <rect x="421" y="22" width="126" height="12" fill="#5346b5"/>
+      <text x="484" y="25" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="700" fill="white">Odia Language</text>
+      <circle cx="484" cy="68" r="14" fill="#cec9f5" stroke="#5346b5" stroke-width="1"/>
+      <text x="484" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">🗣</text>
+      <text x="484" y="96" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#38318a">Voice AI in</text>
+      <text x="484" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#38318a">Odia script</text>
+    </g>
+    <g>
+      <rect x="558" y="8" width="134" height="104" rx="10" fill="#faeeda" stroke="#b87218" stroke-width="1"/>
+      <rect x="558" y="8" width="134" height="26" rx="10" fill="#b87218"/>
+      <rect x="558" y="22" width="134" height="12" fill="#b87218"/>
+      <text x="625" y="25" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="700" fill="white">5T Governance</text>
+      <circle cx="625" cy="68" r="14" fill="#f5ddb5" stroke="#b87218" stroke-width="1"/>
+      <text x="625" y="72" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14">🏛</text>
+      <text x="625" y="96" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#7a4c0e">Smarter citizen</text>
+      <text x="625" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#7a4c0e">services</text>
+    </g>
+  </svg>
+</div>
+
+<div class="odisha-grid wide reveal">
+  <div class="odisha-card"><div class="odisha-label">Agriculture</div><p>AI recommends the right crop for your specific soil, predicts pest attacks before they spread, and tells farmers the optimal time to sell. Apps like Fasal and Kisan AI are already in use by Odisha farmers.</p></div>
+  <div class="odisha-card"><div class="odisha-label">Disaster Management</div><p>Cyclone Fani (2019) caused far fewer casualties than historical norms, partly because AI-assisted systems gave authorities 72+ hours of accurate advance warning for mass evacuations.</p></div>
+  <div class="odisha-card"><div class="odisha-label">Rural Healthcare</div><p>AI tools help ASHA workers screen for anaemia, tuberculosis, and maternal health risks — without specialist doctors in every block. Telemedicine platforms use AI to prioritise and route patients.</p></div>
+  <div class="odisha-card"><div class="odisha-label">Odia Language AI</div><p>The government's Bhashini project is building voice and text AI in Odia. Citizens will soon access any government service by simply speaking in their own language.</p></div>
+</div>
+
+<!-- SECTION 6: MYTHS -->
+<div>
+  <div class="section-header reveal">
+    <span class="section-num">06</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">Five Myths About AI — Busted</h2>
+  <p class="section-lead reveal">Fear and misunderstanding about AI are as common as excitement. Let us address them directly.</p>
+</div>
+
+<div class="myth-grid wide reveal">
+  <div class="myth-header left">MYTH</div>
+  <div class="myth-header right">REALITY</div>
+  <div class="myth-cell left">AI will take all our jobs</div>
+  <div class="myth-cell right">Jobs evolve, not disappear. Tractors helped farmers — they did not replace them.</div>
+  <div class="myth-cell left">AI thinks like a human brain</div>
+  <div class="myth-cell right">AI has no feelings, consciousness, or awareness. It calculates — it does not feel.</div>
+  <div class="myth-cell left">AI is always correct</div>
+  <div class="myth-cell right">AI makes mistakes, especially with rare situations. Always verify important outputs.</div>
+  <div class="myth-cell left">AI is dangerous like the movies</div>
+  <div class="myth-cell right">AI today is a tool controlled entirely by humans. A hammer builds or breaks — your choice.</div>
+  <div class="myth-cell left">AI is only for cities</div>
+  <div class="myth-cell right">Bhashini, Kisan AI, and ASHA apps are already in use across rural India.</div>
+</div>
+
+<p class="reveal"><strong>The most important myth to address:</strong> AI will make human expertise obsolete. The evidence strongly suggests the opposite — AI <em>amplifies</em> human expertise. A doctor with AI sees more patients and makes fewer errors. An IAS officer with AI analysis makes better-informed decisions. An engineer with AI builds more safely and faster.</p>
+
+<!-- SECTION 7: FUTURE -->
+<div id="future">
+  <div class="section-header reveal">
+    <span class="section-num">07</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">Tomorrow — The Future Is AI + Humans</h2>
+  <p class="section-lead reveal">The future of AI is not a competition. It is a collaboration.</p>
+</div>
+
+<div class="ai-human-banner wide reveal">
+  <div class="ai-human-side ai">
+    <div class="ai-human-heading">AI</div>
+    <div class="ai-human-traits">
+      Speed &amp; Scale<br>
+      Pattern Recognition<br>
+      Tireless Memory<br>
+      Works 24/7<br>
+      Processes millions of data points
+    </div>
+  </div>
+  <div class="ai-human-plus">+</div>
+  <div class="ai-human-side human">
+    <div class="ai-human-heading">Humans</div>
+    <div class="ai-human-traits">
+      Empathy &amp; Ethics<br>
+      Creativity &amp; Imagination<br>
+      Moral Judgement<br>
+      Lived Experience<br>
+      Decides direction &amp; purpose
+    </div>
+  </div>
+</div>
+
+<p class="reveal">AI brings things humans cannot match: speed, scale, tireless attention, and the ability to process millions of data points simultaneously. Humans bring things AI cannot replicate: moral judgement, emotional intelligence, creativity rooted in purpose, and the wisdom to know when the data is wrong.</p>
+
+<!-- Stats infographic -->
+<div class="infographic wide reveal">
+  <div class="infographic-title">India's AI Momentum</div>
+  <svg viewBox="0 0 700 130" xmlns="http://www.w3.org/2000/svg">
+    <!-- 4 stat cards -->
+    <rect x="10"  y="10" width="160" height="110" rx="12" fill="#e5f1fb" stroke="#1860a5" stroke-width="1.5"/>
+    <text x="90"  y="52" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="28" font-weight="900" fill="#1860a5">₹10K</text>
+    <text x="90"  y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d4478">crore IndiaAI</text>
+    <text x="90"  y="80" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d4478">Mission Budget</text>
+    <text x="90"  y="106" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#6b6960">Govt of India 2024</text>
+
+    <rect x="183" y="10" width="160" height="110" rx="12" fill="#e1f5ee" stroke="#1a9e75" stroke-width="1.5"/>
+    <text x="263" y="52" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="28" font-weight="900" fill="#1a9e75">3,000+</text>
+    <text x="263" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b4f">AI startups</text>
+    <text x="263" y="80" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b4f">in India</text>
+    <text x="263" y="106" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#6b6960">2024 estimate</text>
+
+    <rect x="356" y="10" width="160" height="110" rx="12" fill="#eeedfe" stroke="#5346b5" stroke-width="1.5"/>
+    <text x="436" y="52" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="28" font-weight="900" fill="#5346b5">22</text>
+    <text x="436" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#38318a">Indian languages</text>
+    <text x="436" y="80" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#38318a">in Bhashini AI</text>
+    <text x="436" y="106" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#6b6960">Including Odia</text>
+
+    <rect x="529" y="10" width="162" height="110" rx="12" fill="#faeeda" stroke="#b87218" stroke-width="1.5"/>
+    <text x="610" y="52" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="28" font-weight="900" fill="#b87218">$3.2B</text>
+    <text x="610" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#7a4c0e">AI funding raised</text>
+    <text x="610" y="80" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#7a4c0e">in India</text>
+    <text x="610" y="106" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#6b6960">2024 record</text>
+  </svg>
+</div>
+
+<div class="analogy-box reveal">
+  <div class="analogy-label">🧭 The Questions for Our Generation</div>
+  <p>Not "Will AI replace us?" but "How do we use AI to help our farmers get better prices? How do we bring specialist doctors to every village? How do we ensure AI speaks Odia and not just English? How do we make sure the benefits of AI reach Biranarasinghpur and not just Bengaluru?" These are questions for people like us to answer.</p>
+</div>
+
+<p class="reveal">These opportunities come with real challenges — privacy, ethics, job displacement, and concentration of AI power. But these challenges need engaged, educated citizens to address them. Not fearful ones who have opted out of the conversation.</p>
+
+<!-- CONCLUSION -->
+<div>
+  <div class="section-header reveal">
+    <span class="section-num">✦</span>
+    <div class="section-rule"></div>
+  </div>
+  <h2 class="section-title reveal">Conclusion: From Fear to Understanding</h2>
+</div>
+
+<p class="reveal">AI is not magic. It is not the Terminator. It is the latest — and most powerful — expression of human ingenuity: our drive to build tools that extend what we can do, see, know, and create.</p>
+
+<p class="reveal">For Biranarasinghpur — a village that has always produced thinkers, leaders, and people of consequence — the call is not merely to use AI, but to <strong>understand it, shape it, and guide it</strong> toward the good of all. Not just the privileged few in the cities, but the farmer in the field, the patient in the village clinic, the student in the government school, and the citizen who speaks only Odia.</p>
+
+<div class="pull-quote reveal">
+  <p>"The machines are learning. The only question is — are we learning too?"</p>
+</div>
+
+<!-- AUTHOR BOX -->
+<div id="author" class="author-box reveal">
+  <div class="author-avatar-lg">MR</div>
+  <div>
+    <div class="author-name">Manas Rath · He/Him</div>
+    <div class="author-role">Senior Director of AI &amp; Analytics | Generative AI, LLMs &amp; Cloud Platforms · Brandscapes Worldwide</div>
+    <div class="author-pills">
+      <span class="author-pill">Ph.D. AI &amp; Deep Learning</span>
+      <span class="author-pill">M.Tech CS — Utkal University</span>
+      <span class="author-pill">MCA</span>
+      <span class="author-pill">M.Sc. Electronics &amp; Telecom</span>
+      <span class="author-pill">26+ Years Experience</span>
+    </div>
+    <p class="author-bio">Manas Rath is a proud son of Biranarasinghpur, Puri, Odisha. With over 26 years of experience spanning university teaching, research, and global technology leadership, he works at the frontier of AI, Generative AI, and Large Language Models. He is passionate about making these ideas accessible to every curious mind — wherever they live.</p>
+  </div>
+</div>
+
+</div><!-- article-grid -->
+</div><!-- article-wrap -->
+</main>
+
+<footer>
+  <p><strong>AI, GenAI &amp; AGI — Yesterday, Today and Tomorrow</strong></p>
+  <p style="margin-top:.5rem;">By Manas Rath · Biranarasinghpur Village Magazine · 2025</p>
+  <p style="margin-top:.5rem;font-size:.75rem;">A proud son of Biranarasinghpur, Puri, Odisha</p>
+</footer>
+
+<script>
+// Reading progress
+const bar = document.getElementById('progress-bar');
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  bar.style.width = (scrolled / total * 100) + '%';
+  nav.classList.toggle('scrolled', scrolled > 20);
+});
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      // stagger siblings slightly
+      const delay = Array.from(entry.target.parentNode.children)
+        .filter(c => c.classList.contains('reveal'))
+        .indexOf(entry.target) * 60;
+      setTimeout(() => entry.target.classList.add('visible'), Math.min(delay, 200));
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+
+// Animate SVG when visible
+const svgObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animated');
+      svgObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('.infographic').forEach(el => svgObserver.observe(el));
+
+// Smooth active nav highlight
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? 'var(--ink)' : '';
+    a.style.fontWeight = a.getAttribute('href') === '#' + current ? '600' : '';
+  });
+});
+</script>
+</body>
+</html>
