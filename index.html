@@ -65,39 +65,116 @@ a { color: inherit; }
 }
 
 /* ═══════════════════════════════════════════════════
-   NAV
+   NAV — hamburger on mobile/tablet, inline on desktop
 ═══════════════════════════════════════════════════ */
 nav {
   position: fixed; inset: 0 0 auto 0; z-index: 900;
   height: 56px;
-  background: rgba(250,249,246,.95);
+  background: rgba(250,249,246,.97);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center;
-  padding: 0 var(--px);
-  gap: 1rem;
+  padding: 0 var(--px); gap: 1rem;
   transition: box-shadow .3s;
 }
 nav.scrolled { box-shadow: var(--sh); }
+
 .nav-logo {
   font-family: var(--ff-display); font-weight: 700;
   font-size: 1rem; color: var(--ink); text-decoration: none;
   white-space: nowrap; letter-spacing: -.2px;
+  flex: 1;
 }
-/* pill links — hide on small, show from 640px */
+
+/* ── Hamburger button ── */
+.nav-burger {
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center; gap: 5px;
+  width: 40px; height: 40px;
+  border: none; background: none; cursor: pointer;
+  padding: 6px; border-radius: 8px;
+  transition: background .2s; flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 910;
+}
+.nav-burger:hover { background: var(--surf); }
+.nav-burger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--ink); border-radius: 2px;
+  transition: transform .32s ease, opacity .25s ease, width .25s ease;
+  transform-origin: center;
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; width: 0; }
+.nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Slide-down drawer ── */
+.nav-drawer {
+  position: fixed; top: 56px; left: 0; right: 0;
+  background: rgba(250,249,246,.98);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 16px 48px rgba(0,0,0,.13);
+  z-index: 850;
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height .38s cubic-bezier(.4,0,.2,1), opacity .28s ease;
+}
+.nav-drawer.open { max-height: 480px; opacity: 1; }
+
+.nav-drawer-inner {
+  padding: .85rem var(--px) 1.4rem;
+  display: flex; flex-direction: column; gap: .1rem;
+}
+.nav-drawer a {
+  font-family: var(--ff-ui); font-size: 1rem; font-weight: 500;
+  color: var(--ink2); text-decoration: none;
+  padding: .68rem .85rem; border-radius: var(--r);
+  display: flex; align-items: center; gap: .65rem;
+  transition: background .18s, color .18s;
+}
+.nav-drawer a:hover, .nav-drawer a:focus-visible {
+  background: var(--surf); color: var(--ink); outline: none;
+}
+.d-num {
+  font-family: var(--ff-ui); font-size: .65rem; font-weight: 700;
+  letter-spacing: .1em; color: var(--faint);
+  min-width: 20px; display: inline-block;
+}
+.nav-drawer-div { height: 1px; background: var(--border); margin: .55rem 0; }
+.nav-drawer-cta {
+  display: block; text-align: center;
+  font-family: var(--ff-ui); font-size: .9rem; font-weight: 600;
+  background: var(--ink); color: #fff;
+  padding: .72rem 1.2rem; border-radius: 99px;
+  margin: .4rem .85rem 0; text-decoration: none;
+  transition: opacity .2s;
+}
+.nav-drawer-cta:hover { opacity: .85; }
+
+/* ── Backdrop ── */
+#nav-backdrop {
+  position: fixed; inset: 56px 0 0 0;
+  background: rgba(15,14,12,.32); z-index: 840;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+#nav-backdrop.show { opacity: 1; pointer-events: all; }
+
+/* ── Desktop inline links (≥ 768px) ── */
 .nav-links {
   display: none; list-style: none;
-  gap: 1.25rem; margin-left: auto; align-items: center;
+  gap: 1.1rem; align-items: center;
 }
 .nav-links a {
   font-family: var(--ff-ui); font-size: .82rem; font-weight: 500;
   color: var(--muted); text-decoration: none;
-  white-space: nowrap; transition: color .2s;
+  white-space: nowrap; transition: color .2s; padding: .25rem 0;
 }
 .nav-links a:hover { color: var(--ink); }
+.nav-links a.active { color: var(--ink); font-weight: 600; }
+
 .nav-cta {
-  margin-left: auto;
   font-family: var(--ff-ui); font-size: .8rem; font-weight: 600;
   background: var(--ink); color: #fff;
   padding: .35rem .9rem; border-radius: 99px;
@@ -105,10 +182,16 @@ nav.scrolled { box-shadow: var(--sh); }
   transition: opacity .2s; flex-shrink: 0;
 }
 .nav-cta:hover { opacity: .8; }
-@media (min-width: 640px) {
+
+/* Desktop: show inline, hide burger/drawer */
+@media (min-width: 768px) {
+  .nav-logo { flex: none; }
   .nav-links { display: flex; margin-left: auto; }
-  .nav-cta   { margin-left: 0; }
+  .nav-cta   { display: inline-block; }
+  .nav-burger, .nav-drawer, #nav-backdrop { display: none !important; }
 }
+/* Mobile: hide desktop CTA (drawer has one) */
+@media (max-width: 767px) { .nav-cta { display: none; } }
 
 /* ═══════════════════════════════════════════════════
    HERO
@@ -567,7 +650,9 @@ footer .ft-accent { color: #9fd8cb; }
 <!-- ── NAV ── -->
 <nav id="nav">
   <a class="nav-logo" href="#">Manas Rath</a>
-  <ul class="nav-links">
+
+  <!-- Desktop inline links -->
+  <ul class="nav-links" id="nav-links">
     <li><a href="#s-history">History</a></li>
     <li><a href="#s-concepts">Concepts</a></li>
     <li><a href="#s-professions">Professions</a></li>
@@ -575,7 +660,28 @@ footer .ft-accent { color: #9fd8cb; }
     <li><a href="#s-future">Future</a></li>
   </ul>
   <a class="nav-cta" href="#author">About Author</a>
+
+  <!-- Hamburger button (mobile/tablet) -->
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile slide-down drawer -->
+<div class="nav-drawer" id="nav-drawer" role="dialog" aria-label="Navigation menu">
+  <div class="nav-drawer-inner">
+    <a href="#s-history"     class="drawer-link"><span class="d-num">01</span> History</a>
+    <a href="#s-concepts"    class="drawer-link"><span class="d-num">02</span> Concepts</a>
+    <a href="#s-professions" class="drawer-link"><span class="d-num">03</span> Professions</a>
+    <a href="#s-odisha"      class="drawer-link"><span class="d-num">04</span> Odisha</a>
+    <a href="#s-future"      class="drawer-link"><span class="d-num">05</span> Future</a>
+    <div class="nav-drawer-div"></div>
+    <a href="#author" class="nav-drawer-cta drawer-link">About the Author</a>
+  </div>
+</div>
+
+<!-- Backdrop overlay -->
+<div id="nav-backdrop"></div>
 
 <!-- ── HERO ── -->
 <section class="hero">
@@ -587,7 +693,7 @@ footer .ft-accent { color: #9fd8cb; }
       Feature Article · Technology &amp; Society · 2026
     </div>
     <h1 class="hero-title">AI, GenAI &amp; <em>AGI</em></h1>
-    <p class="hero-sub">Yesterday, Today and Tomorrow —<br>A Complete Picture for the Thinking Mind</p>
+    <p class="hero-sub">Yesterday, Today and Tomorrow — A Complete Picture for the Thinking Mind</p>
     <div class="hero-meta">
       <div class="hero-av" aria-hidden="true">MR</div>
       <div>
@@ -974,7 +1080,7 @@ footer .ft-accent { color: #9fd8cb; }
   <!-- India Stats -->
   <div class="stats-grid reveal">
     <div class="stat-card blue">
-      <div class="stat-num">₹ 10K<span style="font-size:.55em"> cr</span></div>
+      <div class="stat-num">₹10K<span style="font-size:.55em">cr</span></div>
       <div class="stat-lbl">IndiaAI Mission Budget</div>
       <div class="stat-src">Govt of India 2024</div>
     </div>
@@ -1042,27 +1148,70 @@ footer .ft-accent { color: #9fd8cb; }
 </footer>
 
 <script>
+// ── Hamburger menu ────────────────────────────────
+const burger   = document.getElementById('nav-burger');
+const drawer   = document.getElementById('nav-drawer');
+const backdrop = document.getElementById('nav-backdrop');
+
+function openMenu() {
+  burger.classList.add('open');
+  drawer.classList.add('open');
+  backdrop.classList.add('show');
+  burger.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  burger.classList.remove('open');
+  drawer.classList.remove('open');
+  backdrop.classList.remove('show');
+  burger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+function toggleMenu() {
+  drawer.classList.contains('open') ? closeMenu() : openMenu();
+}
+
+burger.addEventListener('click', toggleMenu);
+backdrop.addEventListener('click', closeMenu);
+
+// Close on any drawer link click
+document.querySelectorAll('.drawer-link').forEach(a => {
+  a.addEventListener('click', closeMenu);
+});
+
+// Close on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && drawer.classList.contains('open')) closeMenu();
+});
+
+// Close drawer if window resizes to desktop
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 768) closeMenu();
+}, { passive: true });
+
 // ── Reading progress ──────────────────────────────
 const prog = document.getElementById('prog');
 const nav  = document.getElementById('nav');
 let ticking = false;
+
 function onScroll() {
   if (!ticking) {
     requestAnimationFrame(() => {
       const s = window.scrollY;
       const h = document.body.scrollHeight - window.innerHeight;
-      prog.style.width = (h > 0 ? (s/h*100) : 0) + '%';
+      prog.style.width = (h > 0 ? (s / h * 100) : 0) + '%';
       nav.classList.toggle('scrolled', s > 20);
-      // active nav
+
+      // Active nav highlight (desktop)
       let cur = '';
       document.querySelectorAll('[id^="s-"]').forEach(el => {
         if (s >= el.offsetTop - 100) cur = el.id;
       });
       document.querySelectorAll('.nav-links a').forEach(a => {
         const active = a.getAttribute('href') === '#' + cur;
-        a.style.color = active ? 'var(--ink)' : '';
-        a.style.fontWeight = active ? '600' : '';
+        a.classList.toggle('active', active);
       });
+
       ticking = false;
     });
     ticking = true;
